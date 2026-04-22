@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boolean Expressions — Interactive Worksheet · Grade 9</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #00b8a9;
+    --teal-light: #e6f7f6;
+    --teal-dark: #008c82;
+    --amber: #f5a623;
+    --amber-light: #fff8ee;
+    --red: #e84040;
+    --red-light: #fef0f0;
+    --green: #27ae60;
+    --green-light: #edfaf3;
+    --ink: #1a1a2e;
+    --ink-mid: #3d3d5c;
+    --ink-soft: #6b6b8a;
+    --rule: #e8e8f0;
+    --bg: #f7f7fb;
+    --white: #ffffff;
+    --tier1: #27ae60;
+    --tier1-bg: #edfaf3;
+    --tier2: #f5a623;
+    --tier2-bg: #fff8ee;
+    --tier3: #e84040;
+    --tier3-bg: #fef0f0;
+    --shadow-sm: 0 1px 3px rgba(26,26,46,.08), 0 1px 2px rgba(26,26,46,.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,.10), 0 1px 4px rgba(26,26,46,.06);
+    --shadow-lg: 0 12px 40px rgba(26,26,46,.13);
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    color: white;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+  }
+  .site-header .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -.01em;
+    color: var(--teal);
+  }
+  .site-header .meta {
+    font-size: .75rem;
+    color: rgba(255,255,255,.5);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: white;
+    padding: 48px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(0,184,169,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .hero h1 strong { font-weight: 700; color: var(--teal); }
+  .hero-sub {
+    color: rgba(255,255,255,.55);
+    font-size: .9rem;
+    margin-top: 16px;
+    max-width: 520px;
+  }
+  .hero-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .hero-tag {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.14);
+    color: rgba(255,255,255,.7);
+    font-size: .72rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .06em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  /* ── LEARNING INTENTION ── */
+  .intention-bar {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    padding: 14px 20px;
+    border-radius: 0 8px 8px 0;
+    font-size: .88rem;
+    color: var(--teal-dark);
+    margin: 32px 0 0;
+  }
+  .intention-bar strong { color: var(--teal-dark); }
+
+  /* ── SUCCESS CRITERIA ── */
+  .sc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .sc-card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: .82rem;
+    color: rgba(255,255,255,.75);
+    display: flex;
+    gap: 10px;
+  }
+  .sc-num {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--teal);
+    background: rgba(0,184,169,.15);
+    border-radius: 6px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── LAYOUT ── */
+  .page-body {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── TAB NAV ── */
+  .tier-nav {
+    display: flex;
+    gap: 4px;
+    padding: 24px 0 0;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 32px;
+    overflow-x: auto;
+  }
+  .tier-tab {
+    padding: 10px 22px;
+    border-radius: 10px 10px 0 0;
+    font-size: .83rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    transition: all .2s;
+    white-space: nowrap;
+    position: relative;
+    bottom: -2px;
+  }
+  .tier-tab:hover { background: var(--rule); color: var(--ink); }
+  .tier-tab.active[data-tier="1"] {
+    background: var(--tier1-bg);
+    color: var(--tier1);
+    border: 2px solid var(--tier1);
+    border-bottom: 2px solid var(--tier1-bg);
+  }
+  .tier-tab.active[data-tier="2"] {
+    background: var(--tier2-bg);
+    color: var(--tier2);
+    border: 2px solid var(--tier2);
+    border-bottom: 2px solid var(--tier2-bg);
+  }
+  .tier-tab.active[data-tier="3"] {
+    background: var(--tier3-bg);
+    color: var(--tier3);
+    border: 2px solid var(--tier3);
+    border-bottom: 2px solid var(--tier3-bg);
+  }
+  .tier-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  .tier-panel { display: none; }
+  .tier-panel.active { display: block; }
+
+  /* ── TIER HEADER ── */
+  .tier-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .tier-badge {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .tier1 .tier-badge { background: var(--tier1-bg); }
+  .tier2 .tier-badge { background: var(--tier2-bg); }
+  .tier3 .tier-badge { background: var(--tier3-bg); }
+  .tier-header-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  .tier1 .tier-header-title { color: var(--tier1); }
+  .tier2 .tier-header-title { color: var(--tier2); }
+  .tier3 .tier-header-title { color: var(--tier3); }
+  .tier-header-sub {
+    font-size: .8rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .tier-score-badge {
+    margin-left: auto;
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+  }
+  .tier-score-badge .score-num {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .tier-score-badge .score-label {
+    font-size: .65rem;
+    color: var(--ink-soft);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  .tier1 .tier-score-badge .score-num { color: var(--tier1); }
+  .tier2 .tier-score-badge .score-num { color: var(--tier2); }
+  .tier3 .tier-score-badge .score-num { color: var(--tier3); }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .q-card:focus-within { box-shadow: var(--shadow-md); }
+  .q-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 18px 24px 0;
+  }
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--ink-soft);
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .q-title {
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+  .q-marks {
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+    background: var(--bg);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .q-body { padding: 14px 24px 20px; }
+
+  /* ── INPUTS ── */
+  textarea, input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .88rem;
+    color: var(--ink);
+    background: var(--bg);
+    transition: border-color .2s;
+    resize: vertical;
+    outline: none;
+  }
+  textarea:focus, input[type="text"]:focus {
+    border-color: var(--teal);
+    background: var(--white);
+  }
+  textarea { min-height: 90px; }
+  .code-area {
+    font-family: 'DM Mono', monospace;
+    font-size: .82rem;
+    background: #1a1a2e;
+    color: #e0e6ff;
+    border: 1.5px solid rgba(255,255,255,.08);
+    padding: 16px 18px;
+    min-height: 120px;
+  }
+  .code-area:focus { border-color: var(--teal); }
+
+  /* ── WORD BANK ── */
+  .word-bank {
+    background: #fffbea;
+    border: 1px dashed var(--amber);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: .82rem;
+  }
+  .word-bank-label {
+    font-family: 'DM Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .word-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    background: var(--white);
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .chip:hover { background: var(--amber); color: white; }
+  .chip:active { transform: scale(.95); }
+
+  /* ── HINT ── */
+  .hint {
+    background: #f0f8ff;
+    border: 1px solid #bee3f8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: .82rem;
+    color: #2b6cb0;
+    margin-top: 10px;
+  }
+  .hint-label {
+    font-family: 'DM Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #3182ce;
+    display: flex; align-items: center; gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  /* ── BOOLEAN TABLE ── */
+  .bool-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .bool-table th {
+    font-size: .7rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--rule);
+  }
+  .bool-table td { padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  .bool-table tr:last-child td { border-bottom: none; }
+  .bool-table .stmt { font-size: .85rem; color: var(--ink-mid); font-style: italic; }
+  .bool-buttons { display: flex; gap: 6px; }
+  .bool-btn {
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    transition: all .18s;
+  }
+  .bool-btn.yes.active { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .bool-btn.no.active { background: var(--red-light); border-color: var(--red); color: var(--red); }
+  .bool-btn:hover:not(.active) { background: var(--bg); }
+  .reason-input {
+    border: none;
+    border-bottom: 1.5px solid var(--rule);
+    background: transparent;
+    font-size: .82rem;
+    padding: 4px 6px;
+    width: 100%;
+    outline: none;
+    color: var(--ink);
+    border-radius: 0;
+  }
+  .reason-input:focus { border-bottom-color: var(--teal); }
+
+  /* ── BOOL SORT TABLE (Tier 1) ── */
+  .sort-btn {
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    transition: all .18s;
+  }
+  .sort-btn.bool.active { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .sort-btn.notbool.active { background: var(--red-light); border-color: var(--red); color: var(--red); }
+  .sort-btn:hover:not(.active) { background: var(--bg); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #1a1a2e;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .code-block-header {
+    background: rgba(255,255,255,.06);
+    padding: 6px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+  }
+  .code-block pre {
+    padding: 14px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: .82rem;
+    color: #e0e6ff;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .kw { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .cmt { color: #546e7a; }
+  .op { color: #89ddff; }
+
+  /* ── FILL-IN CODE ── */
+  .fill-block {
+    background: #1a1a2e;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: .82rem;
+    color: #e0e6ff;
+    line-height: 2;
+    margin: 12px 0;
+  }
+  .fill-in {
+    display: inline-block;
+    border: none;
+    border-bottom: 2px solid var(--teal);
+    background: rgba(0,184,169,.08);
+    color: var(--teal);
+    font-family: 'DM Mono', monospace;
+    font-size: .82rem;
+    width: 80px;
+    padding: 0 6px;
+    outline: none;
+    border-radius: 4px 4px 0 0;
+  }
+  .fill-in:focus { background: rgba(0,184,169,.15); }
+
+  /* ── PROGRESS BAR ── */
+  .score-bar-wrap {
+    background: var(--bg);
+    border-radius: 100px;
+    height: 6px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width .4s ease;
+  }
+  .tier1-bar { background: var(--tier1); }
+  .tier2-bar { background: var(--tier2); }
+  .tier3-bar { background: var(--tier3); }
+
+  /* ── SUBMIT / SCORE ── */
+  .submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    margin-top: 8px;
+  }
+  .score-display {
+    font-family: 'DM Mono', monospace;
+  }
+  .score-display .big { font-size: 2rem; font-weight: 500; }
+  .score-display .of { font-size: .85rem; color: var(--ink-soft); }
+  .grade-badge {
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .grade-E { background: #e0f7f6; color: var(--teal-dark); }
+  .grade-M\+ { background: #fff3cd; color: #856404; }
+  .grade-M { background: #fff8ee; color: #7d5002; }
+  .grade-B { background: #fde8e8; color: #9b1c1c; }
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: .88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  /* ── REFLECTION / SELF-REVIEW ── */
+  .reflection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .refl-card {
+    background: var(--white);
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .refl-icon { font-size: 1.4rem; margin-bottom: 6px; }
+  .refl-label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .refl-card textarea {
+    min-height: 60px;
+    font-size: .8rem;
+  }
+
+  /* ── RUBRIC MODAL ── */
+  .rubric-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 12px 20px;
+    font-size: .83rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: background .2s;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rubric-fab:hover { background: var(--teal-dark); }
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,.65);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    max-width: 780px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    padding: 32px;
+  }
+  .modal-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .modal-close {
+    float: right;
+    background: var(--bg);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: .85rem;
+    color: var(--ink-soft);
+  }
+  .rubric-section { margin-top: 24px; }
+  .rubric-section-title {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+  .rs1 { background: var(--tier1-bg); color: var(--tier1); }
+  .rs2 { background: var(--tier2-bg); color: var(--tier2); }
+  .rs3 { background: var(--tier3-bg); color: var(--tier3); }
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .rubric-table th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--rule);
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .rubric-table td { padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .rubric-table tr:last-child td { border-bottom: none; }
+  .grade-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin-top: 16px; }
+  .grade-table th { padding: 8px 14px; border-bottom: 2px solid var(--rule); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); text-align: left; }
+  .grade-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+
+  /* ── PEER REVIEW ── */
+  .peer-review-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+  .peer-review-title {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .peer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .peer-grid { grid-template-columns: 1fr; }
+    .sc-grid { grid-template-columns: 1fr; }
+    .site-header { padding: 0 16px; }
+    .hero { padding: 32px 16px 40px; }
+    .page-body { padding: 0 12px 60px; }
+    .bool-table td:nth-child(3) { display: none; }
+  }
+
+  /* ── INSTRUCTION BANNER ── */
+  .instruction-banner {
+    background: #fff8ee;
+    border-left: 3px solid var(--amber);
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: .84rem;
+    color: #7d5002;
+    margin-bottom: 20px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--rule);
+    margin: 24px 0;
+  }
+
+  /* ── STATUS ── */
+  .save-status {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--ink-soft);
+    text-align: right;
+    padding: 0 4px 8px;
+    transition: color .3s;
+  }
+  .save-status.saved { color: var(--green); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">Boolean Expressions</div>
+  <div class="meta">Grade 9 · Computer Science · Lesson 6</div>
+</header>
+
+<div class="hero">
+  <div class="page-body" style="padding:0;">
+    <div class="hero-eyebrow">🎯 Learning Intention</div>
+    <h1>Boolean <strong>Expressions</strong><br>Interactive Worksheet</h1>
+    <p class="hero-sub">Students will be able to identify and create Boolean expressions that can be evaluated as <strong>true</strong> or <strong>false</strong> to support logical decision-making and control flow in programs.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">True / False Conditions in Python</span>
+      <span class="hero-tag">20 Marks Each Tier</span>
+      <span class="hero-tag">22/04/2026</span>
+    </div>
+    <div class="sc-grid" style="margin-top:24px;" id="sc-grid-hero">
+      <!-- filled by JS based on active tier -->
+    </div>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- TIER TABS -->
+  <nav class="tier-nav" role="tablist">
+    <button class="tier-tab active" data-tier="1" onclick="switchTier(1)">
+      <span class="tier-dot" style="background:#27ae60"></span>Tier 1 — Support
+    </button>
+    <button class="tier-tab" data-tier="2" onclick="switchTier(2)">
+      <span class="tier-dot" style="background:#f5a623"></span>Tier 2 — Core
+    </button>
+    <button class="tier-tab" data-tier="3" onclick="switchTier(3)">
+      <span class="tier-dot" style="background:#e84040"></span>Tier 3 — Extension
+    </button>
+    <button class="tier-tab" data-tier="r" onclick="switchTier('r')" style="margin-left:auto;">
+      📋 Marking Rubric
+    </button>
+  </nav>
+
+  <div id="save-status" class="save-status">● Auto-save enabled</div>
+
+  <!-- ═══════════════════════════════ TIER 1 ═══════════════════════════════ -->
+  <div class="tier-panel active" id="tier-1">
+    <div class="tier-header tier1">
+      <div class="tier-badge">🟢</div>
+      <div>
+        <div class="tier-header-title">Tier 1 — Support Activity</div>
+        <div class="tier-header-sub">Scaffolded with word bank and hints · Grades E–M</div>
+      </div>
+      <div class="tier-score-badge">
+        <div class="score-num" id="t1-score">—</div>
+        <div class="score-label">/ 20</div>
+        <div class="score-bar-wrap" style="width:80px;margin-top:6px;">
+          <div class="score-bar tier1-bar" id="t1-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="instruction-banner">
+      🌟 <strong>Instructions:</strong> Click on answers, type in boxes, and use the Word Bank chips to fill blanks. Your work saves automatically!
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q1</span>
+        <span class="q-title">What is a Boolean expression? Complete the sentence using words from the Word Bank.</span>
+        <span class="q-marks">2 marks</span>
+      </div>
+      <div class="q-body">
+        <p style="font-size:.9rem;color:var(--ink-mid);margin-bottom:12px;">
+          A Boolean expression is a statement that can only be answered with 
+          <input class="fill-in" id="t1q1a" type="text" placeholder="______" maxlength="10">
+          or 
+          <input class="fill-in" id="t1q1b" type="text" placeholder="______" maxlength="10">
+          .
+        </p>
+        <div class="word-bank">
+          <div class="word-bank-label">💡 Word Bank — click to copy</div>
+          <div class="word-chips">
+            <span class="chip" onclick="fillBlank('t1q1a','True')">True</span>
+            <span class="chip" onclick="fillBlank('t1q1b','False')">False</span>
+            <span class="chip" onclick="fillBlank('t1q1a','Maybe')">Maybe</span>
+            <span class="chip" onclick="fillBlank('t1q1a','Opinion')">Opinion</span>
+            <span class="chip" onclick="fillBlank('t1q1a','Yes')">Yes</span>
+            <span class="chip" onclick="fillBlank('t1q1b','No')">No</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q2</span>
+        <span class="q-title">Sort the statements — click ✅ Boolean or ✗ Not Boolean for each one.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="hint"><div class="hint-label">💡 Hint</div>A Boolean must be answerable with ONLY True or False — not based on opinion!</div>
+        <table class="bool-table" style="margin-top:14px;">
+          <thead><tr><th>Statement</th><th>Your Answer</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="stmt">"The sun rises in the east."</td>
+              <td><div class="bool-buttons">
+                <button class="sort-btn bool" onclick="sortAnswer(this,'t1q2a','bool')">✅ Boolean</button>
+                <button class="sort-btn notbool" onclick="sortAnswer(this,'t1q2a','notbool')">✗ Not Boolean</button>
+              </div><input type="hidden" id="t1q2a"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Pizza is the best food."</td>
+              <td><div class="bool-buttons">
+                <button class="sort-btn bool" onclick="sortAnswer(this,'t1q2b','bool')">✅ Boolean</button>
+                <button class="sort-btn notbool" onclick="sortAnswer(this,'t1q2b','notbool')">✗ Not Boolean</button>
+              </div><input type="hidden" id="t1q2b"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Water boils at 100°C at sea level."</td>
+              <td><div class="bool-buttons">
+                <button class="sort-btn bool" onclick="sortAnswer(this,'t1q2c','bool')">✅ Boolean</button>
+                <button class="sort-btn notbool" onclick="sortAnswer(this,'t1q2c','notbool')">✗ Not Boolean</button>
+              </div><input type="hidden" id="t1q2c"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Tuesday is nicer than Monday."</td>
+              <td><div class="bool-buttons">
+                <button class="sort-btn bool" onclick="sortAnswer(this,'t1q2d','bool')">✅ Boolean</button>
+                <button class="sort-btn notbool" onclick="sortAnswer(this,'t1q2d','notbool')">✗ Not Boolean</button>
+              </div><input type="hidden" id="t1q2d"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q3</span>
+        <span class="q-title">Fill in the Python code. Type "Yes" or "No" for each variable — is each statement a Boolean expression?</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="fill-block">
+          <span class="cmt"># Statement 1: "There are 7 days in a week."</span><br>
+          days_in_week = <input class="fill-in" id="t1q3a" type="text" placeholder="Yes/No" maxlength="5"><br><br>
+          <span class="cmt"># Statement 2: "Cats are cuter than dogs."</span><br>
+          cats_are_cuter = <input class="fill-in" id="t1q3b" type="text" placeholder="Yes/No" maxlength="5"><br><br>
+          <span class="cmt"># Statement 3: "The moon orbits Earth."</span><br>
+          moon_orbits = <input class="fill-in" id="t1q3c" type="text" placeholder="Yes/No" maxlength="5"><br><br>
+          <span class="cmt"># Statement 4: "Maths is the hardest subject."</span><br>
+          maths_hardest = <input class="fill-in" id="t1q3d" type="text" placeholder="Yes/No" maxlength="5">
+        </div>
+        <div class="word-bank">
+          <div class="word-bank-label">💡 Word Bank</div>
+          <div class="word-chips">
+            <span class="chip" onclick="void(0)">"Yes"</span>
+            <span class="chip" onclick="void(0)">"No"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q4</span>
+        <span class="q-title">Write your own Boolean expression about school life. Then write the Python code for it.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="hint" style="margin-bottom:12px;"><div class="hint-label">💡 Hint</div>Choose a fact that is clearly True or False — not an opinion. E.g. "Today is a weekday."</div>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">My Boolean statement:</label>
+        <textarea id="t1q4a" placeholder='e.g. "Today is a school day."' rows="2"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">My Python code:</label>
+        <textarea class="code-area" id="t1q4b" placeholder="variable_name = &quot;Yes&quot;" rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q5</span>
+        <span class="q-title">Explain in your own words: why can't an opinion be a Boolean expression? Give ONE example of an opinion and ONE fact to support your answer.</span>
+        <span class="q-marks">6 marks</span>
+      </div>
+      <div class="q-body">
+        <textarea id="t1q5a" placeholder="Type your explanation here..." rows="4"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+          <div>
+            <label style="font-size:.8rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">Opinion example:</label>
+            <input type="text" id="t1q5b" placeholder="e.g. Cats are cuter than dogs.">
+          </div>
+          <div>
+            <label style="font-size:.8rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">Fact example:</label>
+            <input type="text" id="t1q5c" placeholder="e.g. The Earth orbits the Sun.">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELF REFLECTION -->
+    <div class="submit-row">
+      <div class="score-display">
+        <span class="big tier1" id="t1-score-big" style="color:var(--tier1)">—</span>
+        <span class="of"> / 20</span>
+        <span id="t1-grade-badge"></span>
+      </div>
+      <button class="btn-primary" onclick="scoreT1()">Calculate My Score</button>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="peer-review-title" style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+        🔄 SELF-REFLECTION
+      </div>
+      <div class="reflection-grid">
+        <div class="refl-card">
+          <div class="refl-icon">😊</div>
+          <div class="refl-label">I felt confident about…</div>
+          <textarea id="t1r1" placeholder="Type here..." rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">🤔</div>
+          <div class="refl-label">I found it tricky when…</div>
+          <textarea id="t1r2" placeholder="Type here..." rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">🎯</div>
+          <div class="refl-label">Next time I will…</div>
+          <textarea id="t1r3" placeholder="Type here..." rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ TIER 2 ═══════════════════════════════ -->
+  <div class="tier-panel" id="tier-2">
+    <div class="tier-header tier2">
+      <div class="tier-badge">🟡</div>
+      <div>
+        <div class="tier-header-title">Tier 2 — Core Activity</div>
+        <div class="tier-header-sub">Independent work with some scaffolding · Grades M–B</div>
+      </div>
+      <div class="tier-score-badge">
+        <div class="score-num" id="t2-score">—</div>
+        <div class="score-label">/ 20</div>
+        <div class="score-bar-wrap" style="width:80px;margin-top:6px;">
+          <div class="score-bar tier2-bar" id="t2-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="instruction-banner">
+      🌟 <strong>Instructions:</strong> Answer all questions independently. Justify your decisions in full sentences where asked.
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q1</span>
+        <span class="q-title">In your own words, define a Boolean expression and explain why it is important in programming.</span>
+        <span class="q-marks">2 marks</span>
+      </div>
+      <div class="q-body">
+        <textarea id="t2q1" placeholder="Type your definition and explanation here..." rows="4"></textarea>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q2</span>
+        <span class="q-title">For each statement: click Yes or No, then explain your reasoning.</span>
+        <span class="q-marks">6 marks</span>
+      </div>
+      <div class="q-body">
+        <table class="bool-table">
+          <thead><tr><th>Statement</th><th>Boolean?</th><th>Your Reason</th></tr></thead>
+          <tbody id="t2q2-table">
+            <tr>
+              <td class="stmt">"Today is a school day."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2a','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2a','no')">No</button>
+              </div><input type="hidden" id="t2q2a"></td>
+              <td><input class="reason-input" id="t2q2a-r" type="text" placeholder="Why?"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Chocolate is the best flavour."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2b','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2b','no')">No</button>
+              </div><input type="hidden" id="t2q2b"></td>
+              <td><input class="reason-input" id="t2q2b-r" type="text" placeholder="Why?"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"A triangle has 3 sides."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2c','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2c','no')">No</button>
+              </div><input type="hidden" id="t2q2c"></td>
+              <td><input class="reason-input" id="t2q2c-r" type="text" placeholder="Why?"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Coding is the most fun subject."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2d','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2d','no')">No</button>
+              </div><input type="hidden" id="t2q2d"></td>
+              <td><input class="reason-input" id="t2q2d-r" type="text" placeholder="Why?"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"A year has 365 days."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2e','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2e','no')">No</button>
+              </div><input type="hidden" id="t2q2e"></td>
+              <td><input class="reason-input" id="t2q2e-r" type="text" placeholder="Why?"></td>
+            </tr>
+            <tr>
+              <td class="stmt">"Summer is better than winter."</td>
+              <td><div class="bool-buttons">
+                <button class="bool-btn yes" onclick="boolAnswer(this,'t2q2f','yes')">Yes</button>
+                <button class="bool-btn no" onclick="boolAnswer(this,'t2q2f','no')">No</button>
+              </div><input type="hidden" id="t2q2f"></td>
+              <td><input class="reason-input" id="t2q2f-r" type="text" placeholder="Why?"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q3</span>
+        <span class="q-title">Write Python code for the Boolean statements from Q2. Only include the ones you said were Boolean.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <textarea class="code-area" id="t2q3" placeholder="# Write your Boolean variables here:&#10;school_day = &quot;Yes&quot;&#10;triangle_sides = &quot;Yes&quot;" rows="6"></textarea>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q4</span>
+        <span class="q-title">Write TWO original Boolean expressions about your school's daily routine. Write the Python code for each.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">My Boolean statements:</label>
+        <textarea id="t2q4a" placeholder="1. ...&#10;2. ..." rows="3"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">Python code:</label>
+        <textarea class="code-area" id="t2q4b" placeholder="# Your Boolean variables:&#10;my_boolean_1 = &quot;Yes&quot;&#10;my_boolean_2 = &quot;No&quot;" rows="5"></textarea>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q5</span>
+        <span class="q-title">A classmate says: "Statements like 'The weather is nice' are Boolean because everyone can agree on it." Do you agree or disagree? Explain using what you know about Boolean expressions.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <textarea id="t2q5" placeholder="I disagree/agree because..." rows="5"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <div class="score-display">
+        <span class="big" id="t2-score-big" style="color:var(--tier2)">—</span>
+        <span class="of"> / 20</span>
+        <span id="t2-grade-badge"></span>
+      </div>
+      <button class="btn-primary" onclick="scoreT2()">Calculate My Score</button>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">🔄 SELF-REFLECTION</div>
+      <div class="reflection-grid">
+        <div class="refl-card">
+          <div class="refl-icon">✅</div>
+          <div class="refl-label">I met the success criteria…</div>
+          <textarea id="t2r1" placeholder="Type here..." rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">🔍</div>
+          <div class="refl-label">I still want to understand…</div>
+          <textarea id="t2r2" placeholder="Type here..." rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">⭐</div>
+          <div class="refl-label">My strongest answer was…</div>
+          <textarea id="t2r3" placeholder="Type here..." rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ TIER 3 ═══════════════════════════════ -->
+  <div class="tier-panel" id="tier-3">
+    <div class="tier-header tier3">
+      <div class="tier-badge">🔴</div>
+      <div>
+        <div class="tier-header-title">Tier 3 — Extension Challenge</div>
+        <div class="tier-header-sub">Higher-order thinking · Applied programming · Grades B–Outstanding</div>
+      </div>
+      <div class="tier-score-badge">
+        <div class="score-num" id="t3-score">—</div>
+        <div class="score-label">/ 20</div>
+        <div class="score-bar-wrap" style="width:80px;margin-top:6px;">
+          <div class="score-bar tier3-bar" id="t3-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="instruction-banner">
+      🌟 <strong>Instructions:</strong> All questions require detailed answers. Write clear, well-structured Python code and full-sentence explanations. Think critically!
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q1</span>
+        <span class="q-title">Explain the difference between a Boolean expression and an opinion, using a real-world analogy from outside the classroom.</span>
+        <span class="q-marks">2 marks</span>
+      </div>
+      <div class="q-body">
+        <textarea id="t3q1" placeholder="Type your analogy and explanation here..." rows="5"></textarea>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q2</span>
+        <span class="q-title">Smart Door System — Design Challenge. A school door opens ONLY if a student is enrolled AND it is a school day. Write a complete Python program with Boolean variables and an if/else block.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="code-block">
+          <div class="code-block-header">Python — Starter Code</div>
+          <pre><span class="cmt"># Smart Door System</span>
+<span class="kw">is_enrolled</span> = <span class="str">"Yes"</span>
+<span class="kw">is_school_day</span> = <span class="str">"Yes"</span>
+
+<span class="kw">if</span> is_enrolled <span class="op">==</span> <span class="str">"Yes"</span> <span class="kw">and</span> is_school_day <span class="op">==</span> <span class="str">"Yes"</span>:
+    <span class="kw">print</span>(<span class="str">"Door opens!"</span>)
+<span class="kw">else</span>:
+    <span class="kw">print</span>(<span class="str">"Access denied."</span>)</pre>
+        </div>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">Write / extend your program here:</label>
+        <textarea class="code-area" id="t3q2a" placeholder="# Smart Door System&#10;is_enrolled = &quot;Yes&quot;&#10;is_school_day = &quot;Yes&quot;&#10;&#10;if is_enrolled == &quot;Yes&quot; and is_school_day == &quot;Yes&quot;:&#10;    print(&quot;Door opens!&quot;)&#10;else:&#10;    print(&quot;Access denied.&quot;)" rows="8"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">Explain how your program uses Boolean logic:</label>
+        <textarea id="t3q2b" placeholder="Type your explanation..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q3</span>
+        <span class="q-title">Extend your Smart Door System to include a THIRD condition: the student must also be wearing their uniform. Update your code and explain how adding a condition changes your Boolean logic.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="code-block">
+          <div class="code-block-header">Python — Template (3 conditions)</div>
+          <pre><span class="cmt"># Extended Smart Door System — 3 conditions</span>
+<span class="kw">is_enrolled</span> = <span class="str">"Yes"</span>
+<span class="kw">is_school_day</span> = <span class="str">"Yes"</span>
+<span class="kw">is_wearing_uniform</span> = <span class="str">"Yes"</span>
+
+<span class="kw">if</span> ...:
+    <span class="kw">print</span>(<span class="str">"Door opens!"</span>)
+<span class="kw">else</span>:
+    <span class="kw">print</span>(<span class="str">"Access denied."</span>)</pre>
+        </div>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">My completed code:</label>
+        <textarea class="code-area" id="t3q3a" placeholder="# Extended Smart Door System — 3 conditions&#10;is_enrolled = &quot;Yes&quot;&#10;is_school_day = &quot;Yes&quot;&#10;is_wearing_uniform = &quot;Yes&quot;&#10;&#10;if is_enrolled == &quot;Yes&quot; and is_school_day == &quot;Yes&quot; and is_wearing_uniform == &quot;Yes&quot;:&#10;    print(&quot;Door opens!&quot;)&#10;else:&#10;    print(&quot;Access denied.&quot;)" rows="8"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">How does adding a third condition affect the logic?</label>
+        <textarea id="t3q3b" placeholder="Type your explanation..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q4</span>
+        <span class="q-title">Critical Thinking — Debug and Evaluate. A student wrote this code. Find ALL the problems and rewrite it correctly.</span>
+        <span class="q-marks">6 marks</span>
+      </div>
+      <div class="q-body">
+        <div class="code-block">
+          <div class="code-block-header">Python — Buggy Code</div>
+          <pre><span class="cmt"># Student's attempt</span>
+<span class="kw">is_raining</span> = <span class="str">"Sometimes"</span>
+<span class="kw">temperature</span> = <span class="str">"It feels cold today"</span>
+
+<span class="kw">if</span> is_raining <span class="op">==</span> <span class="str">"Sometimes"</span> <span class="kw">and</span> temperature <span class="op">==</span> <span class="str">"It feels cold today"</span>:
+    <span class="kw">print</span>(<span class="str">"Bring a jacket!"</span>)</pre>
+        </div>
+        <label style="font-size:.82rem;font-weight:600;color:var(--red);display:block;margin:12px 0 4px;">Problems I found:</label>
+        <textarea id="t3q4a" placeholder="List all the problems with this code..." rows="4"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">My corrected code:</label>
+        <textarea class="code-area" id="t3q4b" placeholder="# Corrected version&#10;is_raining = &quot;Yes&quot;&#10;..." rows="7"></textarea>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">Q5</span>
+        <span class="q-title">Real-World Application: Describe TWO real-world systems (outside this lesson) that use Boolean logic. For each, identify the conditions and what happens when True vs False.</span>
+        <span class="q-marks">4 marks</span>
+      </div>
+      <div class="q-body">
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;">System 1:</label>
+        <textarea id="t3q5a" placeholder="System name, conditions, True outcome, False outcome..." rows="3"></textarea>
+        <label style="font-size:.82rem;font-weight:600;color:var(--ink-soft);display:block;margin:12px 0 4px;">System 2:</label>
+        <textarea id="t3q5b" placeholder="System name, conditions, True outcome, False outcome..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <div class="score-display">
+        <span class="big" id="t3-score-big" style="color:var(--tier3)">—</span>
+        <span class="of"> / 20</span>
+        <span id="t3-grade-badge"></span>
+      </div>
+      <button class="btn-primary" onclick="scoreT3()">Calculate My Score</button>
+    </div>
+
+    <!-- Peer Review -->
+    <div class="peer-review-section" style="margin-top:20px;">
+      <div class="peer-review-title">🔁 PEER REVIEW</div>
+      <p style="font-size:.85rem;color:var(--ink-soft);margin-bottom:14px;">Swap your worksheet with a classmate. Give them written feedback below, then discuss together.</p>
+      <div class="peer-grid">
+        <div class="refl-card">
+          <div class="refl-icon">⭐⭐</div>
+          <div class="refl-label">Two Stars (Strengths)</div>
+          <textarea id="t3peer1" placeholder="What did they do well?" rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">🌱</div>
+          <div class="refl-label">One Wish (Improvement)</div>
+          <textarea id="t3peer2" placeholder="What could be improved?" rows="3"></textarea>
+        </div>
+        <div class="refl-card">
+          <div class="refl-icon">👤</div>
+          <div class="refl-label">Reviewer Name & Date</div>
+          <input type="text" id="t3peer3" placeholder="Reviewer name..." style="margin-bottom:8px;">
+          <input type="text" id="t3peer4" value="22/04/2026">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ RUBRIC ═══════════════════════════════ -->
+  <div class="tier-panel" id="tier-r">
+    <div style="padding:24px;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);">
+      <div style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;">Teacher Reference · Grade 9 · Lesson 6</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:2rem;font-weight:300;margin-bottom:4px;">Marking Rubric &amp; <strong style="font-weight:700;color:var(--teal);">Assessment Guide</strong></h2>
+      <p style="font-size:.85rem;color:var(--ink-soft);">Boolean Expressions · All Tiers · 20 Marks Each</p>
+    </div>
+
+    <!-- Tier 1 Rubric -->
+    <div class="rubric-section">
+      <div style="margin-bottom:12px;"><span class="rubric-section-title rs1">🟢 Tier 1 — Support Marking Guide</span></div>
+      <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">
+        <table class="rubric-table">
+          <thead><tr><th>Q</th><th>Criteria</th><th>Marks</th><th>Model Answer / Key Points</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Completes the sentence correctly</td><td>2</td><td>"True" and "False" (1 mark each)</td></tr>
+            <tr><td>2</td><td>Correctly categorises 4 statements</td><td>4</td><td>Boolean: Sun/east ✓, Boils at 100°C ✓ | Not Boolean: Pizza best ✓, Tuesday nicer ✓ — 1 mark each</td></tr>
+            <tr><td>3</td><td>Correct "Yes"/"No" for each variable</td><td>4</td><td>days_in_week="Yes", cats_are_cuter="No", moon_orbits="Yes", maths_hardest="No" — 1 each</td></tr>
+            <tr><td>4</td><td>Valid Boolean statement + correct Python syntax</td><td>4</td><td>Statement must be verifiable T/F (2), Python syntax correct (2)</td></tr>
+            <tr><td>5</td><td>Explanation with 2 examples</td><td>6</td><td>Correct explanation (2), valid opinion example (2), valid fact example (2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tier 2 Rubric -->
+    <div class="rubric-section">
+      <div style="margin-bottom:12px;"><span class="rubric-section-title rs2">🟡 Tier 2 — Core Marking Guide</span></div>
+      <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">
+        <table class="rubric-table">
+          <thead><tr><th>Q</th><th>Criteria</th><th>Marks</th><th>Model Answer / Key Points</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Own-words definition + programming relevance</td><td>2</td><td>Definition (1): can only be T/F. Importance (1): enables decisions / control flow</td></tr>
+            <tr><td>2</td><td>6 correct Y/N + justified reasoning</td><td>6</td><td>Boolean: school day, triangle, 365 days. Not Boolean: chocolate, coding fun, summer better. 0.5 Y/N + 0.5 reason each</td></tr>
+            <tr><td>3</td><td>Python code for Boolean statements only</td><td>4</td><td>Correct variable names (1), correct "Yes"/"No" strings (2), syntax (1)</td></tr>
+            <tr><td>4</td><td>2 original Boolean statements + code</td><td>4</td><td>Each must be verifiable T/F (1 each statement), code syntactically correct (1 each)</td></tr>
+            <tr><td>5</td><td>Critical disagreement with justification</td><td>4</td><td>Must disagree (1), reference opinion vs fact (1), link to Boolean definition (1), clear example (1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tier 3 Rubric -->
+    <div class="rubric-section">
+      <div style="margin-bottom:12px;"><span class="rubric-section-title rs3">🔴 Tier 3 — Extension Marking Guide</span></div>
+      <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">
+        <table class="rubric-table">
+          <thead><tr><th>Q</th><th>Criteria</th><th>Marks</th><th>Model Answer / Key Points</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Analogy with clear Boolean vs opinion distinction</td><td>2</td><td>Analogy is apt (1), clearly distinguishes objective fact from subjective view (1)</td></tr>
+            <tr><td>2</td><td>Complete, functional Python if/else program</td><td>4</td><td>Variables declared correctly (1), AND condition used (1), both branches coded (1), explanation (1)</td></tr>
+            <tr><td>3</td><td>Extended 3-condition program + analysis</td><td>4</td><td>Third variable (1), 3-way AND condition (1), both branches (1), impact analysis (1)</td></tr>
+            <tr><td>4</td><td>Debug analysis + corrected code</td><td>6</td><td>Identifies "Sometimes" not Boolean (1), "feels cold" subjective (1), variables need T/F values (1), corrected variables (1), corrected if condition (1), both print branches (1)</td></tr>
+            <tr><td>5</td><td>2 real-world systems with Boolean logic explained</td><td>4</td><td>System 1 with conditions + outcomes (2), System 2 with conditions + outcomes (2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Grade Boundaries -->
+    <div class="rubric-section">
+      <div style="margin-bottom:12px;"><span class="rubric-section-title" style="background:#f0f0f8;color:#3d3d5c;">📊 Grade Boundaries (All Tiers / 20 Marks)</span></div>
+      <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">
+        <table class="grade-table">
+          <thead><tr><th>Grade</th><th>Mark Range</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong style="color:var(--teal)">Outstanding / E</strong></td><td style="font-family:'DM Mono',monospace;">18–20</td><td>All Boolean concepts correctly applied; code syntactically and logically correct; thorough explanations showing deep understanding.</td></tr>
+            <tr><td><strong style="color:var(--amber)">Exceeds / M+</strong></td><td style="font-family:'DM Mono',monospace;">15–17</td><td>Most concepts correctly applied; minor errors in code or explanation; clear understanding of Boolean vs opinion.</td></tr>
+            <tr><td><strong style="color:#e67e22">Meets / M</strong></td><td style="font-family:'DM Mono',monospace;">11–14</td><td>Core concepts understood; some errors in code or reasoning; generally distinguishes Boolean from opinion with some support.</td></tr>
+            <tr><td><strong style="color:var(--red)">Below / B</strong></td><td style="font-family:'DM Mono',monospace;">0–10</td><td>Partial understanding; significant errors in code or categorisation; needs further support with Boolean fundamentals.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<script>
+// ── TABS ──
+const SC = {
+  1: [
+    ["1","I can recognise statements that qualify as Boolean expressions."],
+    ["2","I can differentiate between factual Boolean statements and opinions."],
+    ["3","I can assign \"Yes\" or \"No\" to variables in Python code."]
+  ],
+  2: [
+    ["1","I can recognise statements that qualify as Boolean expressions."],
+    ["2","I can differentiate between factual Boolean statements and opinions."],
+    ["3","I can apply Boolean expressions in code and explain my reasoning."]
+  ],
+  3: [
+    ["1","I can design systems that require multiple Boolean conditions."],
+    ["2","I can apply Boolean logic in Python with if/else control flow."],
+    ["3","I can evaluate and critique Boolean logic in a given program."]
+  ]
+};
+
+function renderSC(tier) {
+  const g = document.getElementById('sc-grid-hero');
+  if (!SC[tier]) { g.innerHTML=''; return; }
+  g.innerHTML = SC[tier].map(([n,t]) => `
+    <div class="sc-card">
+      <div class="sc-num">${n}</div>
+      <div>${t}</div>
+    </div>`).join('');
+}
+
+function switchTier(t) {
+  document.querySelectorAll('.tier-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tier-panel').forEach(p => p.classList.remove('active'));
+  const tab = document.querySelector(`.tier-tab[data-tier="${t}"]`);
+  if (tab) tab.classList.add('active');
+  const panel = document.getElementById(`tier-${t}`);
+  if (panel) panel.classList.add('active');
+  if (typeof t === 'number') renderSC(t);
+}
+renderSC(1);
+
+// ── FILL BLANK ──
+function fillBlank(id, val) {
+  const el = document.getElementById(id);
+  if (el && !el.value) el.value = val;
+  save();
+}
+
+// ── SORT (Tier 1 Q2) ──
+function sortAnswer(btn, id, val) {
+  const row = btn.closest('tr');
+  row.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).value = val;
+  save();
+}
+
+// ── BOOL (Tier 2 Q2) ──
+function boolAnswer(btn, id, val) {
+  const row = btn.closest('tr');
+  row.querySelectorAll('.bool-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).value = val;
+  save();
+}
+
+// ── AUTOSAVE ──
+function save() {
+  try {
+    const fields = document.querySelectorAll('textarea, input[type=text], input[type=hidden]');
+    const data = {};
+    fields.forEach(f => { if(f.id) data[f.id] = f.value; });
+    localStorage.setItem('boolean_worksheet', JSON.stringify(data));
+    const s = document.getElementById('save-status');
+    s.textContent = '✓ Saved just now';
+    s.classList.add('saved');
+    setTimeout(() => { s.textContent = '● Auto-save enabled'; s.classList.remove('saved'); }, 2000);
+  } catch(e) {}
+}
+
+function load() {
+  try {
+    const data = JSON.parse(localStorage.getItem('boolean_worksheet') || '{}');
+    Object.entries(data).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.value = val;
+      // restore button states
+      if (el.type === 'hidden' && val) {
+        const row = el.closest('tr');
+        if (!row) return;
+        row.querySelectorAll('.sort-btn').forEach(b => {
+          if ((val==='bool' && b.classList.contains('bool')) || (val==='notbool' && b.classList.contains('notbool')))
+            b.classList.add('active');
+        });
+        row.querySelectorAll('.bool-btn').forEach(b => {
+          if ((val==='yes' && b.classList.contains('yes')) || (val==='no' && b.classList.contains('no')))
+            b.classList.add('active');
+        });
+      }
+    });
+  } catch(e) {}
+}
+load();
+
+document.addEventListener('input', save);
+
+// ── SCORING ──
+function hasContent(id) { return (document.getElementById(id)?.value || '').trim().length > 0; }
+
+function getGrade(score) {
+  if (score >= 18) return ['Outstanding / E','E'];
+  if (score >= 15) return ['Exceeds / M+','M+'];
+  if (score >= 11) return ['Meets / M','M'];
+  return ['Below / B','B'];
+}
+
+function applyScore(scoreEl, barEl, bigEl, badgeEl, score) {
+  scoreEl.textContent = score;
+  bigEl.textContent = score;
+  barEl.style.width = (score/20*100)+'%';
+  const [label, code] = getGrade(score);
+  badgeEl.innerHTML = `<span class="grade-badge grade-${code.replace('+','\\+')}" style="background:${code==='E'?'#e0f7f6':code==='M+'?'#fff3cd':code==='M'?'#fff8ee':'#fde8e8'};color:${code==='E'?'#008c82':code==='M+'?'#856404':code==='M'?'#7d5002':'#9b1c1c'}">${label}</span>`;
+}
+
+function scoreT1() {
+  let s = 0;
+  // Q1 (2 marks)
+  const a = (document.getElementById('t1q1a')?.value||'').toLowerCase();
+  const b = (document.getElementById('t1q1b')?.value||'').toLowerCase();
+  if (a==='true') s++;
+  if (b==='false') s++;
+  // Q2 (4 marks) correct: bool, notbool, bool, notbool
+  const correct2 = {t1q2a:'bool',t1q2b:'notbool',t1q2c:'bool',t1q2d:'notbool'};
+  Object.entries(correct2).forEach(([id,ans]) => {
+    if ((document.getElementById(id)?.value||'')===ans) s++;
+  });
+  // Q3 (4 marks) correct: Yes, No, Yes, No
+  const correct3 = {t1q3a:'Yes',t1q3b:'No',t1q3c:'Yes',t1q3d:'No'};
+  Object.entries(correct3).forEach(([id,ans]) => {
+    const v = (document.getElementById(id)?.value||'').trim();
+    if (v.toLowerCase()===ans.toLowerCase() || v.toLowerCase()===`"${ans.toLowerCase()}"`) s++;
+  });
+  // Q4 (4 marks) – heuristic: has content
+  if (hasContent('t1q4a')) s+=2;
+  if (hasContent('t1q4b')) s+=2;
+  // Q5 (6 marks) – heuristic
+  if (hasContent('t1q5a')) s+=2;
+  if (hasContent('t1q5b')) s+=2;
+  if (hasContent('t1q5c')) s+=2;
+  s = Math.min(s,20);
+  applyScore(document.getElementById('t1-score'), document.getElementById('t1-bar'), document.getElementById('t1-score-big'), document.getElementById('t1-grade-badge'), s);
+}
+
+function scoreT2() {
+  let s = 0;
+  if (hasContent('t2q1')) s+=2;
+  // Q2 correct: yes, no, yes, no, yes, no
+  const correct2 = {t2q2a:'yes',t2q2b:'no',t2q2c:'yes',t2q2d:'no',t2q2e:'yes',t2q2f:'no'};
+  Object.entries(correct2).forEach(([id,ans]) => {
+    const val = document.getElementById(id)?.value||'';
+    const reason = document.getElementById(id+'-r')?.value||'';
+    if (val===ans) s+=0.5;
+    if (reason.trim().length>3) s+=0.5;
+  });
+  if (hasContent('t2q3')) s+=4;
+  if (hasContent('t2q4a') && hasContent('t2q4b')) s+=4;
+  if (hasContent('t2q5')) s+=4;
+  s = Math.min(Math.round(s),20);
+  applyScore(document.getElementById('t2-score'), document.getElementById('t2-bar'), document.getElementById('t2-score-big'), document.getElementById('t2-grade-badge'), s);
+}
+
+function scoreT3() {
+  let s = 0;
+  if (hasContent('t3q1')) s+=2;
+  if (hasContent('t3q2a') && hasContent('t3q2b')) s+=4;
+  if (hasContent('t3q3a') && hasContent('t3q3b')) s+=4;
+  if (hasContent('t3q4a') && hasContent('t3q4b')) s+=6;
+  if (hasContent('t3q5a') && hasContent('t3q5b')) s+=4;
+  s = Math.min(s,20);
+  applyScore(document.getElementById('t3-score'), document.getElementById('t3-bar'), document.getElementById('t3-score-big'), document.getElementById('t3-grade-badge'), s);
+}
+</script>
+
+</body>
+</html>
