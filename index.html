@@ -285,11 +285,13 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
     </div>
   </div></div>
 
-  <div class="ms-submit">
-    <div><span class="ms-score-big" id="t1b" style="color:var(--tier1)">—</span><span class="ms-score-of"> / 20</span><span id="t1g"></span></div>
-    <div class="ms-prog"><div class="ms-prog-bg"><div class="ms-prog-bar" id="t1bar" style="background:var(--tier1)"></div></div><div class="ms-prog-lbl" id="t1s">Not yet calculated</div></div>
-    <button class="ms-submit-btn" onclick="scoreT1()">Submit Answers</button>
+  <div style="margin-top:10px">
+    <button class="ms-submit-btn" style="width:100%;padding:14px;font-size:15px;letter-spacing:.02em;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="submitScore('t1')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6.5 11.5L3 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Submit &amp; See My Score
+    </button>
   </div>
+  <div id="t1-result" style="display:none;margin-top:12px"></div>
   <div style="margin-top:12px"><div class="ms-peer-title">🔄 SELF-REFLECTION</div>
     <div class="ms-refl-grid">
       <div class="ms-refl-card"><div class="ms-refl-icon">😊</div><div class="ms-refl-lbl">I felt confident about…</div><textarea id="t1r1" placeholder="Type here..." rows="3"></textarea></div>
@@ -364,11 +366,13 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
     <textarea id="t2q5" placeholder="I disagree/agree because..." rows="5"></textarea>
   </div></div>
 
-  <div class="ms-submit">
-    <div><span class="ms-score-big" id="t2b" style="color:var(--tier2)">—</span><span class="ms-score-of"> / 20</span><span id="t2g"></span></div>
-    <div class="ms-prog"><div class="ms-prog-bg"><div class="ms-prog-bar" id="t2bar" style="background:var(--tier2)"></div></div><div class="ms-prog-lbl" id="t2s">Not yet calculated</div></div>
-    <button class="ms-submit-btn" onclick="scoreT2()">Submit Answers</button>
+  <div style="margin-top:10px">
+    <button class="ms-submit-btn" style="width:100%;padding:14px;font-size:15px;letter-spacing:.02em;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="submitScore('t2')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6.5 11.5L3 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Submit &amp; See My Score
+    </button>
   </div>
+  <div id="t2-result" style="display:none;margin-top:12px"></div>
   <div style="margin-top:12px"><div class="ms-peer-title">🔄 SELF-REFLECTION</div>
     <div class="ms-refl-grid">
       <div class="ms-refl-card"><div class="ms-refl-icon">✅</div><div class="ms-refl-lbl">I met the success criteria…</div><textarea id="t2r1" placeholder="Type here..." rows="3"></textarea></div>
@@ -481,11 +485,13 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
     <textarea id="t3q5b" placeholder="System name, conditions, True outcome, False outcome..." rows="3"></textarea>
   </div></div>
 
-  <div class="ms-submit">
-    <div><span class="ms-score-big" id="t3b" style="color:var(--tier3)">—</span><span class="ms-score-of"> / 20</span><span id="t3g"></span></div>
-    <div class="ms-prog"><div class="ms-prog-bg"><div class="ms-prog-bar" id="t3bar" style="background:var(--tier3)"></div></div><div class="ms-prog-lbl" id="t3s">Not yet calculated</div></div>
-    <button class="ms-submit-btn" onclick="scoreT3()">Submit Answers</button>
+  <div style="margin-top:10px">
+    <button class="ms-submit-btn" style="width:100%;padding:14px;font-size:15px;letter-spacing:.02em;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="submitScore('t3')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6.5 11.5L3 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Submit &amp; See My Score
+    </button>
   </div>
+  <div id="t3-result" style="display:none;margin-top:12px"></div>
   <div class="ms-peer" style="margin-top:10px">
     <div class="ms-peer-title">🔁 PEER REVIEW</div>
     <div class="ms-peer-sub">Swap your worksheet with a classmate. Give them written feedback below, then discuss together.</div>
@@ -545,6 +551,39 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
 </div>
 
 </div><!-- /ms-page -->
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes countUp{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes barGrow{from{width:0%}to{width:var(--bar-w)}}
+@keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.6}}
+.result-card{background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden;animation:fadeUp .4s ease}
+.result-header{padding:28px 28px 20px;text-align:center;position:relative}
+.result-circle{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;animation:popIn .5s cubic-bezier(.175,.885,.32,1.275) .2s both}
+.result-circle .big-score{font-size:36px;font-weight:700;line-height:1}
+.result-circle .of-score{font-size:13px;opacity:.75;margin-top:2px}
+.result-grade-badge{display:inline-block;font-size:15px;font-weight:700;padding:6px 20px;border-radius:100px;animation:countUp .4s ease .4s both}
+.result-name{font-size:13px;color:#616161;margin-top:8px}
+.result-divider{border:none;border-top:1px solid #e8e8e8;margin:0}
+.result-body{padding:20px 24px}
+.result-body-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8a8a8a;margin-bottom:12px}
+.qrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;animation:fadeUp .3s ease both}
+.qrow-label{font-size:12px;color:#242424;font-weight:500;width:36px;flex-shrink:0}
+.qrow-bar-bg{flex:1;height:8px;background:#f0f0f0;border-radius:100px;overflow:hidden}
+.qrow-bar{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.qrow-score{font-size:12px;font-weight:600;width:40px;text-align:right;flex-shrink:0}
+.qrow-status{font-size:14px;width:18px;flex-shrink:0}
+.result-footer{background:#f9f9f9;border-top:1px solid #e8e8e8;padding:14px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.result-msg{font-size:13px;color:#424242;flex:1;line-height:1.5}
+.print-btn{background:#464775;color:white;border:none;border-radius:4px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.print-btn:hover{background:#6264a7}
+.retry-btn{background:transparent;color:#464775;border:1px solid #464775;border-radius:4px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.retry-btn:hover{background:#f0f0f8}
+.confetti-wrap{position:relative;overflow:hidden}
+.conf-dot{position:absolute;width:8px;height:8px;border-radius:2px;animation:confFall 1.2s ease-in forwards}
+@keyframes confFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(80px) rotate(360deg);opacity:0}}
+@media print{.ms-topbar,.ms-tabs,.ms-q,.ms-instr,.ms-intent,.ms-sc-grid,.ms-form-sub,.ms-instr,.ms-peer,.ms-refl-grid,.ms-save,[onclick]{display:none!important}.result-card{box-shadow:none;border:2px solid #ccc}.print-btn,.retry-btn{display:none!important}}
+</style>
 <script>
 function switchTier(t){
   document.querySelectorAll('.ms-tab').forEach(b=>b.classList.remove('active'));
@@ -591,46 +630,159 @@ function load(){
 load();
 document.addEventListener('input',save);
 function hc(id){return(document.getElementById(id)?.value||'').trim().length>3;}
-function grade(s){
-  if(s>=18)return['Outstanding / E','#107c10','#dff6dd'];
-  if(s>=15)return['Exceeds / M+','#8a4000','#fff4ce'];
-  if(s>=11)return['Meets / M','#c7922a','#fff4ce'];
-  return['Below / B','#c50f1f','#fde7e9'];
+
+function gradeInfo(s){
+  if(s>=18)return{label:'Outstanding / E',emoji:'🌟',color:'#107c10',bg:'#dff6dd',ring:'#107c10',msg:"Exceptional work! You have a deep understanding of Boolean expressions. You're ready for the next challenge!"};
+  if(s>=15)return{label:'Exceeds / M+',emoji:'🎯',color:'#8a4000',bg:'#fff4ce',ring:'#c7922a',msg:"Great job! Most concepts are correct with only minor errors. You clearly understand Boolean vs opinion."};
+  if(s>=11)return{label:'Meets / M',emoji:'👍',color:'#5a3e00',bg:'#fff4ce',ring:'#c7922a',msg:"Good effort! Core concepts are understood. Review any questions you weren't sure about and you'll be there."};
+  return{label:'Below / B',emoji:'📚',color:'#c50f1f',bg:'#fde7e9',ring:'#c50f1f',msg:"Keep going! Review the marking guide and try again. Boolean fundamentals take practice — you've got this."};
 }
-function applyScore(bi,bari,si,gi,s){
-  document.getElementById(bi).textContent=s;
-  document.getElementById(bari).style.width=(s/20*100)+'%';
-  document.getElementById(si).textContent=s+' / 20 marks';
-  const[l,c,bg]=grade(s);
-  document.getElementById(gi).innerHTML=`<span class="ms-grade-pill" style="background:${bg};color:${c}">${l}</span>`;
+
+function confetti(container,count=18){
+  const colors=['#6264a7','#107c10','#c7922a','#0078d4','#c50f1f','#e8d700'];
+  for(let i=0;i<count;i++){
+    const d=document.createElement('div');
+    d.className='conf-dot';
+    d.style.cssText=`left:${Math.random()*100}%;top:0;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*.6}s;animation-duration:${.8+Math.random()*.6}s;width:${6+Math.random()*6}px;height:${6+Math.random()*6}px`;
+    container.appendChild(d);
+    setTimeout(()=>d.remove(),1800);
+  }
 }
-function scoreT1(){
-  let s=0;
-  const a=(document.getElementById('t1q1a')?.value||'').toLowerCase().trim();
-  const b=(document.getElementById('t1q1b')?.value||'').toLowerCase().trim();
-  if(a==='true')s++;if(b==='false')s++;
-  const c2={t1q2a:'bool',t1q2b:'notbool',t1q2c:'bool',t1q2d:'notbool'};
-  Object.entries(c2).forEach(([id,ans])=>{if(document.getElementById(id)?.value===ans)s++;});
-  const c3={t1q3a:'yes',t1q3b:'no',t1q3c:'yes',t1q3d:'no'};
-  Object.entries(c3).forEach(([id,ans])=>{const v=(document.getElementById(id)?.value||'').replace(/[" ]/g,'').toLowerCase();if(v===ans)s++;});
-  if(hc('t1q4a'))s+=2;if(hc('t1q4b'))s+=2;
-  if(hc('t1q5a'))s+=2;if(hc('t1q5b'))s++;if(hc('t1q5c'))s++;
-  applyScore('t1b','t1bar','t1s','t1g',Math.min(s,20));
+
+function animateCount(el,target,duration=900){
+  const start=Date.now();
+  const tick=()=>{
+    const elapsed=Date.now()-start;
+    const progress=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-progress,3);
+    el.textContent=Math.round(ease*target);
+    if(progress<1)requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
-function scoreT2(){
-  let s=0;
-  if(hc('t2q1'))s+=2;
-  const c2={t2q2a:'yes',t2q2b:'no',t2q2c:'yes',t2q2d:'no',t2q2e:'yes',t2q2f:'no'};
-  Object.entries(c2).forEach(([id,ans])=>{if(document.getElementById(id)?.value===ans)s+=0.5;if(hc(id+'-r'))s+=0.5;});
-  if(hc('t2q3'))s+=4;if(hc('t2q4a')&&hc('t2q4b'))s+=4;if(hc('t2q5'))s+=4;
-  applyScore('t2b','t2bar','t2s','t2g',Math.min(Math.round(s),20));
+
+function renderResult(tier,total,qs){
+  const g=gradeInfo(total);
+  const pct=Math.round(total/20*100);
+  const container=document.getElementById(`${tier}-result`);
+  container.style.display='block';
+
+  const qRows=qs.map((q,i)=>{
+    const pct2=Math.round(q.earned/q.max*100);
+    const barColor=pct2>=80?'#107c10':pct2>=50?'#c7922a':'#c50f1f';
+    const status=q.earned===q.max?'✅':q.earned>0?'🟡':'❌';
+    return`<div class="qrow" style="animation-delay:${.5+i*.07}s">
+      <span class="qrow-label">Q${i+1}</span>
+      <div class="qrow-bar-bg"><div class="qrow-bar" id="${tier}-qbar${i}" style="width:0%;background:${barColor};--bar-w:${pct2}%"></div></div>
+      <span class="qrow-score" style="color:${barColor}">${q.earned}/${q.max}</span>
+      <span class="qrow-status">${status}</span>
+    </div>`;
+  }).join('');
+
+  const tierName=tier==='t1'?'Tier 1 — Support':tier==='t2'?'Tier 2 — Core':'Tier 3 — Extension';
+  const dateStr=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+  container.innerHTML=`
+  <div class="result-card confetti-wrap" id="${tier}-rc">
+    <div class="result-header" style="background:${g.bg}">
+      <div class="result-circle" style="background:white;border:4px solid ${g.ring}">
+        <div class="big-score" style="color:${g.color}" id="${tier}-cnt">0</div>
+        <div class="of-score" style="color:${g.color}">/ 20</div>
+      </div>
+      <div class="result-grade-badge" style="background:${g.ring};color:white">${g.emoji} ${g.label}</div>
+      <div class="result-name">${tierName} &nbsp;·&nbsp; ${dateStr} &nbsp;·&nbsp; Grade 9 Computer Science</div>
+    </div>
+    <hr class="result-divider">
+    <div class="result-body">
+      <div class="result-body-title">Question breakdown</div>
+      ${qRows}
+      <div style="margin-top:14px;background:#f5f5f5;border-radius:6px;overflow:hidden;height:10px">
+        <div id="${tier}-totalbar" style="height:100%;width:0%;background:${g.ring};transition:width 1.2s cubic-bezier(.4,0,.2,1)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#8a8a8a;margin-top:4px"><span>0</span><span style="font-weight:600;color:${g.color}">${total}/20 — ${pct}%</span><span>20</span></div>
+    </div>
+    <div class="result-footer">
+      <div class="result-msg">${g.msg}</div>
+      <button class="retry-btn" onclick="resetScore('${tier}')">↺ Try again</button>
+      <button class="print-btn" onclick="window.print()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="3" y="1" width="10" height="5" rx="1" stroke="white" stroke-width="1.5"/><path d="M3 6H2a1 1 0 00-1 1v5a1 1 0 001 1h1M13 6h1a1 1 0 011 1v5a1 1 0 01-1 1h-1" stroke="white" stroke-width="1.5"/><rect x="3" y="10" width="10" height="5" rx="1" stroke="white" stroke-width="1.5"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </div>`;
+
+  // Animate count-up
+  setTimeout(()=>{
+    animateCount(document.getElementById(`${tier}-cnt`),total);
+    document.getElementById(`${tier}-totalbar`).style.width=pct+'%';
+    qs.forEach((_,i)=>{
+      const bar=document.getElementById(`${tier}-qbar${i}`);
+      if(bar)setTimeout(()=>{bar.style.width=Math.round(qs[i].earned/qs[i].max*100)+'%';},100+i*80);
+    });
+    if(total>=15)confetti(document.getElementById(`${tier}-rc`),total>=18?30:18);
+  },100);
+
+  container.scrollIntoView({behavior:'smooth',block:'center'});
 }
-function scoreT3(){
-  let s=0;
-  if(hc('t3q1'))s+=2;if(hc('t3q2a')&&hc('t3q2b'))s+=4;
-  if(hc('t3q3a')&&hc('t3q3b'))s+=4;if(hc('t3q4a')&&hc('t3q4b'))s+=6;
-  if(hc('t3q5a')&&hc('t3q5b'))s+=4;
-  applyScore('t3b','t3bar','t3s','t3g',Math.min(s,20));
+
+function resetScore(tier){
+  const c=document.getElementById(`${tier}-result`);
+  c.style.display='none';
+  c.innerHTML='';
+}
+
+function submitScore(tier){
+  if(tier==='t1'){
+    let qs=[];
+    let s1=0;
+    const a=(document.getElementById('t1q1a')?.value||'').toLowerCase().trim();
+    const b=(document.getElementById('t1q1b')?.value||'').toLowerCase().trim();
+    if(a==='true')s1++;if(b==='false')s1++;
+    qs.push({earned:s1,max:2});
+
+    let s2=0;
+    const c2={t1q2a:'bool',t1q2b:'notbool',t1q2c:'bool',t1q2d:'notbool'};
+    Object.entries(c2).forEach(([id,ans])=>{if(document.getElementById(id)?.value===ans)s2++;});
+    qs.push({earned:s2,max:4});
+
+    let s3=0;
+    const c3={t1q3a:'yes',t1q3b:'no',t1q3c:'yes',t1q3d:'no'};
+    Object.entries(c3).forEach(([id,ans])=>{const v=(document.getElementById(id)?.value||'').replace(/[" ]/g,'').toLowerCase();if(v===ans)s3++;});
+    qs.push({earned:s3,max:4});
+
+    let s4=0;if(hc('t1q4a'))s4+=2;if(hc('t1q4b'))s4+=2;
+    qs.push({earned:s4,max:4});
+
+    let s5=0;if(hc('t1q5a'))s5+=2;if(hc('t1q5b'))s5++;if(hc('t1q5c'))s5++;
+    qs.push({earned:Math.min(s5,6),max:6});
+
+    renderResult('t1',Math.min(qs.reduce((a,q)=>a+q.earned,0),20),qs);
+  }
+  else if(tier==='t2'){
+    let qs=[];
+    qs.push({earned:hc('t2q1')?2:0,max:2});
+
+    let s2=0;
+    const c2={t2q2a:'yes',t2q2b:'no',t2q2c:'yes',t2q2d:'no',t2q2e:'yes',t2q2f:'no'};
+    Object.entries(c2).forEach(([id,ans])=>{if(document.getElementById(id)?.value===ans)s2+=0.5;if(hc(id+'-r'))s2+=0.5;});
+    qs.push({earned:Math.min(Math.round(s2*10)/10,6),max:6});
+
+    qs.push({earned:hc('t2q3')?4:0,max:4});
+    qs.push({earned:(hc('t2q4a')&&hc('t2q4b'))?4:hc('t2q4a')||hc('t2q4b')?2:0,max:4});
+    qs.push({earned:hc('t2q5')?4:0,max:4});
+
+    const total=Math.min(Math.round(qs.reduce((a,q)=>a+q.earned,0)),20);
+    renderResult('t2',total,qs.map(q=>({...q,earned:Math.round(q.earned)})));
+  }
+  else if(tier==='t3'){
+    let qs=[];
+    qs.push({earned:hc('t3q1')?2:0,max:2});
+    qs.push({earned:(hc('t3q2a')&&hc('t3q2b'))?4:hc('t3q2a')||hc('t3q2b')?2:0,max:4});
+    qs.push({earned:(hc('t3q3a')&&hc('t3q3b'))?4:hc('t3q3a')||hc('t3q3b')?2:0,max:4});
+    qs.push({earned:(hc('t3q4a')&&hc('t3q4b'))?6:hc('t3q4a')||hc('t3q4b')?3:0,max:6});
+    qs.push({earned:(hc('t3q5a')&&hc('t3q5b'))?4:hc('t3q5a')||hc('t3q5b')?2:0,max:4});
+    renderResult('t3',Math.min(qs.reduce((a,q)=>a+q.earned,0),20),qs);
+  }
 }
 </script>
 </body>
