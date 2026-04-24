@@ -174,9 +174,69 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
 .ms-rub-table th{text-align:left;padding:7px 11px;border-bottom:2px solid var(--ms-border);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ms-text-soft);font-weight:700;background:var(--ms-bg)}
 .ms-rub-table td{padding:9px 11px;border-bottom:1px solid var(--ms-border);vertical-align:top}
 .ms-rub-table tr:last-child td{border-bottom:none}
+
+/* LOGIN OVERLAY */
+#login-overlay{position:fixed;inset:0;background:#f5f5fb;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Segoe UI',sans-serif}
+.login-card{background:white;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.13);width:100%;max-width:420px;overflow:hidden}
+.login-card-top{background:#464775;padding:28px 28px 24px;text-align:center;color:white}
+.login-card-top svg{margin-bottom:10px}
+.login-card-top h1{font-size:20px;font-weight:700;margin-bottom:4px}
+.login-card-top p{font-size:12px;opacity:.75}
+.login-card-body{padding:24px 28px}
+.login-label{font-size:12px;font-weight:600;color:#616161;display:block;margin-bottom:5px}
+.login-input{width:100%;border:1.5px solid #d1d1d1;border-radius:4px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;margin-bottom:14px;color:#242424;transition:border-color .15s}
+.login-input:focus{border-color:#464775}
+.login-input.error{border-color:#c50f1f}
+.login-error{font-size:11px;color:#c50f1f;margin-top:-10px;margin-bottom:10px;display:none}
+.login-submit{width:100%;background:#464775;color:white;border:none;border-radius:4px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.login-submit:hover{background:#6264a7}
+.login-codes{background:#f5f5fb;border-radius:4px;padding:10px 13px;font-size:12px;color:#464775;margin-bottom:16px;border:1px solid #e0e0f0}
+.login-codes strong{display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a8a8a}
+.login-code-chips{display:flex;flex-wrap:wrap;gap:5px}
+.login-code-chip{background:#464775;color:white;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;cursor:pointer;transition:background .12s}
+.login-code-chip:hover{background:#6264a7}
+.login-resume{background:#dff6dd;border:1px solid #107c10;border-radius:4px;padding:10px 13px;font-size:12px;color:#107c10;margin-bottom:14px;display:none}
+.login-resume strong{display:block;margin-bottom:4px}
+/* User badge in topbar */
+.user-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;font-size:11px;padding:3px 10px;border-radius:2px;display:flex;align-items:center;gap:5px;cursor:pointer}
+.user-badge:hover{background:rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
+
+<!-- ══ LOGIN OVERLAY ══ -->
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="login-card-top">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="rgba(255,255,255,.15)"/><path d="M20 8a6 6 0 110 12 6 6 0 010-12zm0 14c6.627 0 12 2.686 12 6v2H8v-2c0-3.314 5.373-6 12-6z" fill="white"/></svg>
+      <h1>Boolean Expressions</h1>
+      <p>Year 9 · Computer Science · Lesson 6</p>
+    </div>
+    <div class="login-card-body">
+      <div class="login-resume" id="login-resume">
+        <strong>👋 Welcome back!</strong>
+        <span id="login-resume-msg"></span>
+      </div>
+      <label class="login-label">Your Full Name <span style="color:#c50f1f">*</span></label>
+      <input class="login-input" id="login-name" type="text" placeholder="e.g. Sara Ahmed" maxlength="60" onkeydown="if(event.key==='Enter')document.getElementById('login-class').focus()">
+      <div class="login-error" id="name-error">Please enter your name.</div>
+      <label class="login-label">Class Code <span style="color:#c50f1f">*</span></label>
+      <div class="login-codes">
+        <strong>Your teacher's class codes — click to fill:</strong>
+        <div class="login-code-chips">
+          <span class="login-code-chip" onclick="pickCode('9A')">9A</span>
+          <span class="login-code-chip" onclick="pickCode('9B')">9B</span>
+          <span class="login-code-chip" onclick="pickCode('9C')">9C</span>
+          <span class="login-code-chip" onclick="pickCode('9D')">9D</span>
+          <span class="login-code-chip" onclick="pickCode('9E')">9E</span>
+        </div>
+      </div>
+      <input class="login-input" id="login-class" type="text" placeholder="e.g. 9A" maxlength="10" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-error" id="class-error">Please enter your class code.</div>
+      <button class="login-submit" onclick="doLogin()">Start Worksheet →</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOP BAR -->
 <div class="ms-topbar">
@@ -187,6 +247,10 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
   <div class="ms-topbar-divider"></div>
   <span class="ms-topbar-title">Boolean Expressions · Year 9 · Lesson 6</span>
   <div class="ms-topbar-right">
+    <div class="user-badge" id="user-badge" style="display:none" onclick="logoutUser()">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="white"><path d="M8 2a3 3 0 110 6 3 3 0 010-6zm0 7c3.314 0 6 1.343 6 3v1H2v-1c0-1.657 2.686-3 6-3z"/></svg>
+      <span id="user-badge-text">Student</span>
+    </div>
     <button class="ms-topbar-btn" onclick="save()">💾 Save</button>
     <button class="ms-topbar-btn primary">Share</button>
   </div>
@@ -607,19 +671,72 @@ function sb(btn,id,val){
   document.getElementById(id).value=val;
   save();
 }
+
+/* ══ IDENTITY ══ */
+let currentUser = null;
+
+function getUserKey(name, cls) {
+  return 'bw_progress_' + name.trim().toLowerCase().replace(/\s+/g,'_') + '_' + cls.trim().toLowerCase();
+}
+
+function pickCode(code) {
+  document.getElementById('login-class').value = code;
+}
+
+function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const cls  = document.getElementById('login-class').value.trim();
+  let ok = true;
+  if (!name) { document.getElementById('name-error').style.display='block'; document.getElementById('login-name').classList.add('error'); ok=false; } 
+  else { document.getElementById('name-error').style.display='none'; document.getElementById('login-name').classList.remove('error'); }
+  if (!cls)  { document.getElementById('class-error').style.display='block'; document.getElementById('login-class').classList.add('error'); ok=false; }
+  else { document.getElementById('class-error').style.display='none'; document.getElementById('login-class').classList.remove('error'); }
+  if (!ok) return;
+
+  currentUser = { name, cls, key: getUserKey(name, cls) };
+  localStorage.setItem('bw_last_user', JSON.stringify(currentUser));
+
+  // Show badge
+  document.getElementById('user-badge').style.display='flex';
+  document.getElementById('user-badge-text').textContent = name + ' · ' + cls;
+
+  // Hide overlay
+  document.getElementById('login-overlay').style.display='none';
+
+  // Load their saved progress
+  loadProgress();
+}
+
+function logoutUser() {
+  if (!confirm('Log out? Your progress is saved and you can resume with the same name + class code.')) return;
+  currentUser = null;
+  document.getElementById('user-badge').style.display='none';
+  document.getElementById('login-overlay').style.display='flex';
+  document.getElementById('login-name').value='';
+  document.getElementById('login-class').value='';
+  document.getElementById('login-resume').style.display='none';
+  // Clear form fields
+  document.querySelectorAll('textarea,input[type=text],input[type=hidden]').forEach(f=>{if(f.id&&f.id.startsWith('t'))f.value='';});
+  document.querySelectorAll('.ms-stmt-btn').forEach(b=>b.classList.remove('av','an','ab','anb'));
+}
+
 function save(){
   try{
     const d={};
     document.querySelectorAll('textarea,input[type=text],input[type=hidden]').forEach(f=>{if(f.id)d[f.id]=f.value;});
-    localStorage.setItem('bw_ms2',JSON.stringify(d));
+    const key = currentUser ? currentUser.key : 'bw_ms2';
+    localStorage.setItem(key, JSON.stringify(d));
     const s=document.getElementById('ms-save');
-    s.textContent='✓ All responses saved';s.classList.add('saved');
-    setTimeout(()=>{s.textContent='Responses saved automatically';s.classList.remove('saved');},2000);
+    s.textContent='✓ Progress saved for '+( currentUser ? currentUser.name : 'you');
+    s.classList.add('saved');
+    setTimeout(()=>{s.textContent='Responses saved automatically';s.classList.remove('saved');},2500);
   }catch(e){}
 }
-function load(){
+
+function loadProgress(){
   try{
-    const d=JSON.parse(localStorage.getItem('bw_ms2')||'{}');
+    const key = currentUser ? currentUser.key : 'bw_ms2';
+    const d=JSON.parse(localStorage.getItem(key)||'{}');
     Object.entries(d).forEach(([id,val])=>{
       const el=document.getElementById(id);if(!el)return;el.value=val;
       if(el.type==='hidden'&&val){
@@ -632,7 +749,23 @@ function load(){
     });
   }catch(e){}
 }
-load();
+
+/* ══ CHECK FOR RETURNING USER ON PAGE LOAD ══ */
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const last = JSON.parse(localStorage.getItem('bw_last_user') || 'null');
+    if (last && last.name && last.cls) {
+      const existing = localStorage.getItem(last.key);
+      if (existing) {
+        document.getElementById('login-resume').style.display='block';
+        document.getElementById('login-resume-msg').textContent=`Found saved progress for ${last.name} (${last.cls}). Enter your details to continue.`;
+      }
+      document.getElementById('login-name').value = last.name;
+      document.getElementById('login-class').value = last.cls;
+    }
+  } catch(e) {}
+});
+
 document.addEventListener('input',save);
 function hc(id){return(document.getElementById(id)?.value||'').trim().length>3;}
 
@@ -879,8 +1012,7 @@ function getSubmissions() {
 const _origRender = renderResult;
 window.renderResult = function(tier, total, qs) {
   _origRender(tier, total, qs);
-  // Prompt for name
-  const name = prompt('Enter your name to record your submission:') || 'Anonymous';
+  const name = currentUser ? currentUser.name + ' (' + currentUser.cls + ')' : (prompt('Enter your name to record your submission:') || 'Anonymous');
   saveSubmission(tier, total, qs, name);
 };
 
