@@ -198,6 +198,7 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
   <button class="ms-tab" data-tier="2" onclick="switchTier(2)"><span class="tab-dot" style="background:#c7922a"></span>Tier 2 — Core</button>
   <button class="ms-tab" data-tier="3" onclick="switchTier(3)"><span class="tab-dot" style="background:#c50f1f"></span>Tier 3 — Extension</button>
   <button class="ms-tab" data-tier="r" onclick="switchTier('r')" style="margin-left:auto">📋 Marking Rubric</button>
+  <button class="ms-tab" data-tier="dash" onclick="switchTier('dash');loadDashboard()">📊 Teacher Dashboard</button>
 </div>
 
 <div class="ms-page">
@@ -550,6 +551,10 @@ textarea.ms-ce:focus{border-bottom:2px solid #0078d4;margin-bottom:0}
   </div>
 </div>
 
+<!-- ══════ TEACHER DASHBOARD ══════ -->
+<div class="tier-panel" id="tier-dash">
+</div>
+
 </div><!-- /ms-page -->
 <style>
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -782,6 +787,332 @@ function submitScore(tier){
     qs.push({earned:(hc('t3q4a')&&hc('t3q4b'))?6:hc('t3q4a')||hc('t3q4b')?3:0,max:6});
     qs.push({earned:(hc('t3q5a')&&hc('t3q5b'))?4:hc('t3q5a')||hc('t3q5b')?2:0,max:4});
     renderResult('t3',Math.min(qs.reduce((a,q)=>a+q.earned,0),20),qs);
+  }
+}
+</script>
+
+<!-- ══ DASHBOARD STYLES ══ -->
+<style>
+.dash-wrap{max-width:900px;margin:0 auto;padding:0 0 60px}
+.dash-header{background:#464775;border-radius:6px;padding:20px 24px;color:white;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.dash-header h2{font-size:18px;font-weight:700;margin-bottom:2px}
+.dash-header p{font-size:12px;opacity:.75}
+.dash-pw-wall{background:white;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:40px 32px;text-align:center;margin-bottom:16px}
+.dash-pw-wall h3{font-size:18px;font-weight:700;margin-bottom:8px;color:#242424}
+.dash-pw-wall p{font-size:13px;color:#616161;margin-bottom:20px}
+.dash-pw-input{border:1.5px solid #d1d1d1;border-radius:4px;padding:9px 14px;font-size:14px;font-family:inherit;width:260px;outline:none;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto}
+.dash-pw-input:focus{border-color:#464775}
+.dash-pw-btn{background:#464775;color:white;border:none;border-radius:4px;padding:9px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.dash-pw-btn:hover{background:#6264a7}
+.dash-pw-err{color:#c50f1f;font-size:12px;margin-top:6px;display:none}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.dash-stat{background:white;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:14px 16px;text-align:center}
+.dash-stat .val{font-size:26px;font-weight:700;line-height:1;margin-bottom:3px}
+.dash-stat .lbl{font-size:11px;color:#8a8a8a;text-transform:uppercase;letter-spacing:.05em}
+.dash-table-wrap{background:white;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden;margin-bottom:14px}
+.dash-table-hdr{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e8e8e8;flex-wrap:wrap;gap:8px}
+.dash-table-hdr h3{font-size:14px;font-weight:700;color:#242424}
+.dash-actions{display:flex;gap:8px}
+.dash-btn{background:transparent;border:1px solid #d1d1d1;border-radius:3px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:#464775;transition:all .12s}
+.dash-btn:hover{background:#e8e8f4;border-color:#464775}
+.dash-btn.danger{color:#c50f1f;border-color:#c50f1f}.dash-btn.danger:hover{background:#fde7e9}
+.dash-table{width:100%;border-collapse:collapse;font-size:13px}
+.dash-table th{text-align:left;padding:9px 14px;background:#f5f5f5;border-bottom:2px solid #e8e8e8;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a8a8a;font-weight:700;white-space:nowrap}
+.dash-table td{padding:10px 14px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.dash-table tr:last-child td{border-bottom:none}
+.dash-table tr:hover td{background:#fafafa}
+.grade-pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.gE{background:#dff6dd;color:#107c10}.gMp{background:#fff4ce;color:#8a4000}.gM{background:#fff0d4;color:#c7922a}.gB{background:#fde7e9;color:#c50f1f}
+.tier-pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.tp1{background:#dff6dd;color:#107c10}.tp2{background:#fff4ce;color:#8a4000}.tp3{background:#fde7e9;color:#c50f1f}
+.dash-empty{text-align:center;padding:48px 20px;color:#8a8a8a}
+.dash-empty svg{opacity:.3;margin-bottom:12px}
+.dash-empty p{font-size:14px}
+.dash-filter{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.dash-filter select{border:1px solid #d1d1d1;border-radius:3px;padding:5px 10px;font-size:12px;font-family:inherit;color:#242424;outline:none;cursor:pointer}
+.dash-filter select:focus{border-color:#464775}
+.dash-search{border:1px solid #d1d1d1;border-radius:3px;padding:5px 10px;font-size:12px;font-family:inherit;color:#242424;outline:none;width:160px}
+.dash-search:focus{border-color:#464775}
+.bar-mini{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;margin-right:4px;min-width:4px}
+.dash-expanded{background:#f9f9ff;border-left:3px solid #464775;padding:10px 14px;font-size:12px;color:#424242;display:none}
+.dash-expanded.open{display:block}
+.dash-exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:6px}
+.dash-exp-q{background:white;border:1px solid #e8e8e8;border-radius:3px;padding:6px 10px;font-size:11px}
+.dash-exp-q strong{display:block;color:#464775;margin-bottom:2px}
+.dash-chart-wrap{background:white;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:14px}
+.dash-chart-wrap h3{font-size:13px;font-weight:700;margin-bottom:14px;color:#242424}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
+.bar-col .bar-body{width:100%;border-radius:3px 3px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1)}
+.bar-col .bar-lbl{font-size:10px;color:#8a8a8a;text-align:center;white-space:nowrap}
+.bar-col .bar-val{font-size:11px;font-weight:700;color:#464775}
+@media(max-width:600px){.dash-stats{grid-template-columns:1fr 1fr}.dash-table th:nth-child(4),.dash-table td:nth-child(4){display:none}}
+</style>
+
+<script>
+/* ══ SUBMISSION STORAGE KEY ══ */
+const SUB_KEY = 'bw_submissions_v1';
+const DASH_PW = 'boolean-teacher-2026';
+
+/* ══ Save a submission ══ */
+function saveSubmission(tier, score, qs, name) {
+  const all = getSubmissions();
+  const entry = {
+    id: Date.now(),
+    name: name || 'Anonymous',
+    tier: tier,
+    score: score,
+    qs: qs,
+    grade: gradeInfo(score).label,
+    time: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),
+    timestamp: Date.now()
+  };
+  all.push(entry);
+  localStorage.setItem(SUB_KEY, JSON.stringify(all));
+}
+
+function getSubmissions() {
+  try { return JSON.parse(localStorage.getItem(SUB_KEY) || '[]'); } catch(e) { return []; }
+}
+
+/* ══ Patch renderResult to also save submission ══ */
+const _origRender = renderResult;
+window.renderResult = function(tier, total, qs) {
+  _origRender(tier, total, qs);
+  // Prompt for name
+  const name = prompt('Enter your name to record your submission:') || 'Anonymous';
+  saveSubmission(tier, total, qs, name);
+};
+
+/* ══ DASHBOARD ══ */
+let dashUnlocked = false;
+let dashFilter = { tier: 'all', grade: 'all', search: '' };
+let expandedRow = null;
+
+function loadDashboard() {
+  const panel = document.getElementById('tier-dash');
+  if (!dashUnlocked) {
+    renderPwWall(panel);
+  } else {
+    renderDash(panel);
+  }
+}
+
+function renderPwWall(panel) {
+  panel.innerHTML = `
+  <div class="dash-wrap">
+    <div class="dash-pw-wall">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="display:block;margin:0 auto 16px">
+        <rect width="48" height="48" rx="10" fill="#e8e8f4"/>
+        <path d="M32 22v-4a8 8 0 00-16 0v4h-2a2 2 0 00-2 2v14a2 2 0 002 2h20a2 2 0 002-2V24a2 2 0 00-2-2h-2zm-10 8a2 2 0 114 0v3h-4v-3zm2-14a4 4 0 014 4v4h-8v-4a4 4 0 014-4z" fill="#464775"/>
+      </svg>
+      <h3>Teacher Dashboard</h3>
+      <p>Enter the teacher password to view all student submissions.</p>
+      <input class="dash-pw-input" type="password" id="dash-pw" placeholder="Teacher password…" onkeydown="if(event.key==='Enter')checkDashPw()">
+      <br>
+      <button class="dash-pw-btn" onclick="checkDashPw()">Unlock Dashboard</button>
+      <div class="dash-pw-err" id="dash-pw-err">❌ Incorrect password. Try again.</div>
+    </div>
+  </div>`;
+}
+
+function checkDashPw() {
+  const pw = document.getElementById('dash-pw').value;
+  if (pw === DASH_PW) {
+    dashUnlocked = true;
+    renderDash(document.getElementById('tier-dash'));
+  } else {
+    document.getElementById('dash-pw-err').style.display = 'block';
+    document.getElementById('dash-pw').value = '';
+    document.getElementById('dash-pw').focus();
+  }
+}
+
+function renderDash(panel) {
+  const all = getSubmissions();
+  const filtered = filterSubs(all);
+
+  // Stats
+  const total = all.length;
+  const avgScore = total ? Math.round(all.reduce((s,r)=>s+r.score,0)/total*10)/10 : '—';
+  const gradeCount = {E:0,'M+':0,M:0,B:0};
+  all.forEach(r => {
+    if(r.score>=18)gradeCount.E++;
+    else if(r.score>=15)gradeCount['M+']++;
+    else if(r.score>=11)gradeCount.M++;
+    else gradeCount.B++;
+  });
+  const tierCount = {t1:0,t2:0,t3:0};
+  all.forEach(r=>{ if(tierCount[r.tier]!==undefined)tierCount[r.tier]++; });
+
+  panel.innerHTML = `
+  <div class="dash-wrap">
+    <div class="dash-header">
+      <div>
+        <h2>📊 Teacher Dashboard</h2>
+        <p>Boolean Expressions · Year 9 · Lesson 6 &nbsp;·&nbsp; ${total} submission${total!==1?'s':''} recorded</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="dash-btn" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="dash-btn danger" onclick="clearAll()">🗑 Clear All</button>
+        <button class="dash-btn" onclick="renderDash(document.getElementById('tier-dash'))">↺ Refresh</button>
+      </div>
+    </div>
+
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="val" style="color:#464775">${total}</div><div class="lbl">Submissions</div></div>
+      <div class="dash-stat"><div class="val" style="color:#107c10">${avgScore}</div><div class="lbl">Avg Score</div></div>
+      <div class="dash-stat"><div class="val" style="color:#107c10">${gradeCount.E}</div><div class="lbl">Outstanding E</div></div>
+      <div class="dash-stat"><div class="val" style="color:#8a4000">${gradeCount['M+']}</div><div class="lbl">Exceeds M+</div></div>
+      <div class="dash-stat"><div class="val" style="color:#c7922a">${gradeCount.M}</div><div class="lbl">Meets M</div></div>
+      <div class="dash-stat"><div class="val" style="color:#c50f1f">${gradeCount.B}</div><div class="lbl">Below B</div></div>
+    </div>
+
+    ${total > 0 ? renderBarChart(all) : ''}
+
+    <div class="dash-table-wrap">
+      <div class="dash-table-hdr">
+        <h3>All Submissions</h3>
+        <div class="dash-actions">
+          <input class="dash-search" type="text" placeholder="Search name…" value="${dashFilter.search}" oninput="dashFilter.search=this.value;renderDash(document.getElementById('tier-dash'))">
+          <select class="dash-filter" onchange="dashFilter.tier=this.value;renderDash(document.getElementById('tier-dash'))">
+            <option value="all" ${dashFilter.tier==='all'?'selected':''}>All Tiers</option>
+            <option value="t1" ${dashFilter.tier==='t1'?'selected':''}>Tier 1</option>
+            <option value="t2" ${dashFilter.tier==='t2'?'selected':''}>Tier 2</option>
+            <option value="t3" ${dashFilter.tier==='t3'?'selected':''}>Tier 3</option>
+          </select>
+          <select class="dash-filter" onchange="dashFilter.grade=this.value;renderDash(document.getElementById('tier-dash'))">
+            <option value="all" ${dashFilter.grade==='all'?'selected':''}>All Grades</option>
+            <option value="E" ${dashFilter.grade==='E'?'selected':''}>Outstanding E</option>
+            <option value="M+" ${dashFilter.grade==='M+'?'selected':''}>Exceeds M+</option>
+            <option value="M" ${dashFilter.grade==='M'?'selected':''}>Meets M</option>
+            <option value="B" ${dashFilter.grade==='B'?'selected':''}>Below B</option>
+          </select>
+        </div>
+      </div>
+      ${filtered.length === 0 ? renderEmpty(total) : renderTable(filtered)}
+    </div>
+  </div>`;
+}
+
+function filterSubs(all) {
+  return all.filter(r => {
+    const tierOk = dashFilter.tier === 'all' || r.tier === dashFilter.tier;
+    const gradeOk = dashFilter.grade === 'all' ||
+      (dashFilter.grade==='E' && r.score>=18) ||
+      (dashFilter.grade==='M+' && r.score>=15 && r.score<18) ||
+      (dashFilter.grade==='M' && r.score>=11 && r.score<15) ||
+      (dashFilter.grade==='B' && r.score<11);
+    const searchOk = !dashFilter.search || r.name.toLowerCase().includes(dashFilter.search.toLowerCase());
+    return tierOk && gradeOk && searchOk;
+  }).sort((a,b)=>b.timestamp-a.timestamp);
+}
+
+function renderEmpty(total) {
+  return `<div class="dash-empty">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#f0f0f8"/><path d="M14 16h20v20H14z" stroke="#8a8a8a" stroke-width="2" fill="none"/><path d="M19 22h10M19 27h6" stroke="#8a8a8a" stroke-width="2" stroke-linecap="round"/></svg>
+    <p>${total===0 ? 'No submissions yet.<br>Students need to click <strong>"Submit & See My Score"</strong> to appear here.' : 'No submissions match your filters.'}</p>
+  </div>`;
+}
+
+function renderTable(rows) {
+  const tierLabel = {t1:'Tier 1',t2:'Tier 2',t3:'Tier 3'};
+  const tierClass = {t1:'tp1',t2:'tp2',t3:'tp3'};
+  return `<table class="dash-table">
+    <thead><tr>
+      <th>#</th><th>Student Name</th><th>Tier</th><th>Score</th><th>Grade</th><th>Q Breakdown</th><th>Submitted</th><th></th>
+    </tr></thead>
+    <tbody>
+      ${rows.map((r,i)=>{
+        const gc = r.score>=18?'gE':r.score>=15?'gMp':r.score>=11?'gM':'gB';
+        const bars = r.qs ? r.qs.map((q,qi)=>{
+          const pct=Math.round(q.earned/q.max*100);
+          const c=pct>=80?'#107c10':pct>=50?'#c7922a':'#c50f1f';
+          return `<span class="bar-mini" style="width:${Math.max(4,pct*0.3)}px;background:${c}" title="Q${qi+1}: ${q.earned}/${q.max}"></span>`;
+        }).join('') : '';
+        return `<tr>
+          <td style="color:#8a8a8a;font-size:11px">${i+1}</td>
+          <td style="font-weight:600">${r.name}</td>
+          <td><span class="tier-pill ${tierClass[r.tier]||'tp1'}">${tierLabel[r.tier]||r.tier}</span></td>
+          <td><strong style="font-size:15px">${r.score}</strong><span style="color:#8a8a8a;font-size:11px">/20</span></td>
+          <td><span class="grade-pill ${gc}">${r.grade}</span></td>
+          <td>${bars}</td>
+          <td style="font-size:11px;color:#8a8a8a;white-space:nowrap">${r.time}</td>
+          <td><button class="dash-btn" style="font-size:11px;padding:3px 8px" onclick="toggleExpand(${r.id})">▼ Details</button></td>
+        </tr>
+        <tr id="exp-${r.id}"><td colspan="8" style="padding:0">
+          <div class="dash-expanded" id="exp-inner-${r.id}">
+            <strong style="font-size:12px;color:#464775">Question Breakdown — ${r.name}</strong>
+            <div class="dash-exp-grid" style="margin-top:8px">
+              ${r.qs ? r.qs.map((q,qi)=>{
+                const pct=Math.round(q.earned/q.max*100);
+                const c=pct>=80?'#107c10':pct>=50?'#c7922a':'#c50f1f';
+                return `<div class="dash-exp-q">
+                  <strong style="color:${c}">Q${qi+1} — ${q.earned}/${q.max} marks</strong>
+                  <div style="background:#f0f0f0;border-radius:2px;height:5px;margin-top:4px;overflow:hidden">
+                    <div style="width:${pct}%;height:100%;background:${c};border-radius:2px"></div>
+                  </div>
+                </div>`;
+              }).join('') : '<div style="color:#8a8a8a;font-size:12px">No breakdown available</div>'}
+            </div>
+          </div>
+        </td></tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderBarChart(all) {
+  const grades = [
+    {label:'Outstanding\nE (18–20)',min:18,max:20,color:'#107c10'},
+    {label:'Exceeds\nM+ (15–17)',min:15,max:17,color:'#c7922a'},
+    {label:'Meets\nM (11–14)',min:11,max:14,color:'#8a4000'},
+    {label:'Below\nB (0–10)',min:0,max:10,color:'#c50f1f'},
+  ];
+  const counts = grades.map(g=>all.filter(r=>r.score>=g.min&&r.score<=g.max).length);
+  const maxC = Math.max(...counts,1);
+  const bars = grades.map((g,i)=>`
+    <div class="bar-col">
+      <div class="bar-val">${counts[i]}</div>
+      <div class="bar-body" style="height:${Math.max(4,counts[i]/maxC*80)}px;background:${g.color}"></div>
+      <div class="bar-lbl" style="font-size:9px;color:#8a8a8a;text-align:center;line-height:1.3">${g.label.replace('\n','<br>')}</div>
+    </div>`).join('');
+  return `<div class="dash-chart-wrap">
+    <h3>Grade Distribution</h3>
+    <div class="bar-chart">${bars}</div>
+  </div>`;
+}
+
+function toggleExpand(id) {
+  const inner = document.getElementById('exp-inner-'+id);
+  if (!inner) return;
+  const isOpen = inner.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.dash-expanded').forEach(el=>el.classList.remove('open'));
+  if (!isOpen) inner.classList.add('open');
+}
+
+function exportCSV() {
+  const all = getSubmissions();
+  if (!all.length) { alert('No submissions to export.'); return; }
+  const rows = [['Name','Tier','Score','Grade','Q1','Q2','Q3','Q4','Q5','Submitted']];
+  all.forEach(r => {
+    const qScores = r.qs ? r.qs.map(q=>`${q.earned}/${q.max}`) : ['','','','',''];
+    while(qScores.length<5) qScores.push('');
+    rows.push([r.name, r.tier, r.score, r.grade, ...qScores.slice(0,5), r.time]);
+  });
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `boolean-expressions-results-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function clearAll() {
+  if (confirm('Delete ALL submissions? This cannot be undone.')) {
+    localStorage.removeItem(SUB_KEY);
+    renderDash(document.getElementById('tier-dash'));
   }
 }
 </script>
